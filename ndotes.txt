@@ -1,0 +1,39 @@
+ 
+
+tous les version precedentes
+TComp.StmtList
+     S:=nil;
+     repeat
+   changes:
+     repeat
+     S:=nil;
+
+Preprocessor: ppBooleanExpr
+          // new code :must use full evaluation to get (boths) tokens 
+         uuCmpAnd:Result:= integer((Result<>0))and integer((ppEqualityExpr(True)<>0));
+         uuCmpOr:Result:= integer((Result<>0))or integer((ppEqualityExpr(True)<>0));
+
+
+newElement : elementAccess
+Newstmt
+ExpressionList
+
+ {   if not PrevExpr.DataType.IsArray then
+       raise ECompException.CreateRes(@ARRAY_EXPECTED);  }
+const_stmt:
+           leak with C:TExpr not used
+TComp.AssignExpr:
+   function TComp.AssignExpr(AExpr:TExpr): TExpr;
+   begin 
+    case CurrentToken of
+         uuopAssign: Result:=NewAssignExpr(AExpr,Expression(True,True));
+       uuPlusAssign: Result:=NewPreIncrExpr(imPreInc,AExpr,Expression(True,True)); //+=
+      uuMinusAssign: Result:=NewPreIncrExpr(imPreDec,AExpr,Expression(True,True)); //-=
+    else
+       Result:= AExpr;
+    end;
+   end;
+
+for_stmt:
+    old: ForStmt.S := Stmt(True,False);
+    new: ForStmt.S := Stmt(True,True);
